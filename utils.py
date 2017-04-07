@@ -46,3 +46,19 @@ def auto_canny(image, sigma=0.33):
 	upper = int(min(255, (1.0 + sigma) * v))
 	edged = cv2.Canny(image, lower, upper)
 	return edged
+
+def get_mosaic_response(image):
+    im2 = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    sobel = cv2.Sobel(im2, cv2.CV_32F, 2, 2, ksize=3)
+    resp = np.abs(sobel * 100).astype(np.uint8)
+    kernel = np.ones((3,3),np.uint8)
+    resp = cv2.erode(resp, kernel)
+    kernel = np.ones((30,30),np.uint8)
+    resp = cv2.dilate(resp, kernel)
+    resp = cv2.dilate(resp, kernel)
+    resp = cv2.erode(resp, kernel)
+    resp = cv2.erode(resp, kernel)
+    act = np.copy(resp)
+    act[resp != 0] = 0
+    act[resp == 0] = 255
+    return act

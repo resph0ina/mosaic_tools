@@ -1,4 +1,4 @@
-import cv2, os, sys
+import cv2, os, sys, time
 import numpy as np
 from utils import *
 
@@ -32,6 +32,22 @@ def test2():
       cv2.imshow('im',img)
       cv2.waitKey(0)
 
+def test3():
+    img = cv2.imread("1.jpg")
+    cv2.imshow("image", img)
+    cv2.waitKey(0)
+#    mask = np.zeros((img.shape[0],img.shape[1]), dtype=np.uint8)
+#    cv2.circle(mask, (600, 400), 300, 255, -1, 8, 0)
+    mask = cv2.imread('mask.jpg', cv2.IMREAD_GRAYSCALE)
+    mask = 255 - mask
+    for i in [5,10,20]:
+        im2 = add_mosaic_mask(img, mask, i, in_place=False)
+        t=time.time()
+        act = get_mosaic_response(im2)
+        print time.time()-t
+        cv2.imshow("act", act)
+        cv2.waitKey(0)
+
 if __name__ == '__main__':
-    test1()
+    test3()
   
